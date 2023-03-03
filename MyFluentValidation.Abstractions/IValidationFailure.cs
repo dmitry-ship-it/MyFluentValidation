@@ -2,10 +2,10 @@
 {
     public interface IValidationFailure
     {
-        string PropertyName { get; set; }
+        string PropertyName { get; init; }
 
-        string ErrorMessage { get; set; }
+        string ErrorMessage { get; init; }
 
-        object? AttemptedValue { get; set; }
+        object AttemptedValue { get; init; }
     }
 }

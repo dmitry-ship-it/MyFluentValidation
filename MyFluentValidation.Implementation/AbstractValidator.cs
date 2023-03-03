@@ -1,4 +1,6 @@
 ﻿using MyFluentValidation.Abstractions;
+using MyFluentValidation.Implementation.Exceptions;
+using System.Linq.Expressions;
 
 namespace MyFluentValidation.Implementation
 {
@@ -17,13 +19,17 @@ namespace MyFluentValidation.Implementation
 
             if (!result.IsValid)
             {
-                // TODO: CREATE ValidationException
-                throw new Exception();
+                throw new ValidationException(result.Errors);
             }
         }
 
-        protected IPropertyRuleSet<T, TProperty> RuleFor<TProperty>(Func<T, TProperty> selector)
+        protected IPropertyRuleSet<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty?>> selector)
         {
+            if (selector.Body is not MemberExpression)
+            {
+                throw new ArgumentException("Provided expression is not MemberExpression", nameof(selector));
+            }
+
             var propertyRuleSet = new PropertyRuleSet<T, TProperty>(selector);
 
             set.Add(propertyRuleSet);

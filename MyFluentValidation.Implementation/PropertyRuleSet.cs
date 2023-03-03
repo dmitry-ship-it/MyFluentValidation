@@ -1,13 +1,14 @@
 ﻿using MyFluentValidation.Abstractions;
+using System.Linq.Expressions;
 
 namespace MyFluentValidation.Implementation
 {
     public class PropertyRuleSet<T, TProperty> : IPropertyRuleSet<T, TProperty>
     {
-        private readonly Func<T, TProperty> accessor;
+        private readonly Expression<Func<T, TProperty?>> accessor;
         private readonly List<IPropertyRule<T, TProperty>> propertyRules = new();
 
-        public PropertyRuleSet(Func<T, TProperty> accessor)
+        public PropertyRuleSet(Expression<Func<T, TProperty?>> accessor)
         {
             this.accessor = accessor;
         }
@@ -27,7 +28,11 @@ namespace MyFluentValidation.Implementation
 
                 if (!current.IsValid)
                 {
-                    result.Errors.Add(new ValidationFailure("TODO", current.Message!));
+                    result.Errors.Add(new ValidationFailure(
+                        current.PropertyName!,
+                        current.Message!,
+                        current.AttemptedValue!
+                    ));
                 }
             }
 

@@ -1,32 +1,19 @@
-﻿using MyFluentValidation.Abstractions;
-
-namespace MyFluentValidation.Implementation.Rules
+﻿namespace MyFluentValidation.Implementation.Rules
 {
-    public class Range<T, TProperty> : IPropertyRule<T, TProperty>
+    internal class Range<T, TProperty> : PropertyRuleBase<T, TProperty>
         where TProperty : IComparable<TProperty>
     {
-        private const string ErrorMessage = "Value should be null";
+        protected override string ErrorMessage { get; }
 
-        private readonly TProperty from;
-        private readonly TProperty to;
+        protected override Predicate<TProperty?> ValidationPredicate { get; }
+
+        protected override bool AllowNullPropertyValue { get; }
 
         public Range(TProperty from, TProperty toInclusive)
         {
-            this.from = from;
-            to = toInclusive;
-        }
-
-        public IPropertyValidationResult Validate(T entity, Func<T, TProperty> accessor)
-        {
-            var value = accessor(entity);
-            var isValid = value.CompareTo(from) >= 1
-                && to.CompareTo(value) <= 0;
-
-            return new PropertyValidationResult
-            {
-                IsValid = isValid,
-                Message = !isValid ? ErrorMessage : null
-            };
+            ErrorMessage = $"Value is less than {from} or greater than {toInclusive}";
+            ValidationPredicate = property =>
+                property?.CompareTo(from) >= 0 && toInclusive.CompareTo(property) >= 0;
         }
     }
 }

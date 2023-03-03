@@ -2,8 +2,12 @@
 {
     public interface IPropertyValidationResult
     {
-        bool IsValid { get; }
+        bool IsValid { get; init; }
 
-        string? Message { get; }
+        string? Message { get; init; }
+
+        string? PropertyName { get; init; }
+
+        object? AttemptedValue { get; init; }
     }
 }

@@ -7,10 +7,11 @@ namespace MyFluentValidation.ConsoleTest
     {
         public UserValidator()
         {
-            // TODO: Fix warning by adding ref types nullability signs and null checks
-            RuleFor(prop => prop.Name).NotNull();
+            RuleFor(prop => prop.Name).NotNull().NotEmpty().Length(7);
 
             RuleFor(prop => prop.Age).Range(0, 100);
+
+            RuleFor(prop => prop.Email).NotNull().NotEmpty().Email();
         }
     }
 }

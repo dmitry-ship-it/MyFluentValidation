@@ -8,8 +8,9 @@ public static class Program
     {
         var user = new User()
         {
-            Name = "Jon Doe",
-            Age = -33
+            Name = null,
+            Age = 22,
+            Email = "jon.doe@mail.com"
         };
 
         var validator = new UserValidator();

@@ -1,21 +1,13 @@
-﻿using MyFluentValidation.Abstractions;
-
-namespace MyFluentValidation.Implementation.Rules
+﻿namespace MyFluentValidation.Implementation.Rules
 {
-    public class NotNull<T, TProperty> : IPropertyRule<T, TProperty>
+    internal class NotNull<T, TProperty> : PropertyRuleBase<T, TProperty>
         where TProperty : class
     {
-        private const string ErrorMessage = "Value should not be null";
+        protected override Predicate<TProperty?> ValidationPredicate { get; } = property =>
+            property is not null;
 
-        public IPropertyValidationResult Validate(T entity, Func<T, TProperty> accessor)
-        {
-            var isValid = accessor(entity) is not null;
+        protected override string ErrorMessage { get; } = "Value should not be null";
 
-            return new PropertyValidationResult
-            {
-                IsValid = isValid,
-                Message = !isValid ? ErrorMessage : null
-            };
-        }
+        protected override bool AllowNullPropertyValue { get; } = true;
     }
 }
